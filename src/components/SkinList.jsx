@@ -1,12 +1,20 @@
 import { SkinCard } from "./SkinCard";
-import { useSkinsContext } from "../contexts/SkinsContext";
+import { useFilterContext } from "../contexts/FilterContext";
 
 export const SkinList = () => {
-  const { skins } = useSkinsContext();
+  const { filteredSkins, search } = useFilterContext();
+
+  if (filteredSkins.length === 0) {
+    return (
+      <p className="skin-list-empty">
+        Nenhuma skin encontrada{search ? ` para "${search}"` : ""}.
+      </p>
+    );
+  }
 
   return (
     <div className="skin-list">
-      {skins.map((skin) => (
+      {filteredSkins.map((skin) => (
         <SkinCard key={skin.uuid} skin={skin} />
       ))}
     </div>

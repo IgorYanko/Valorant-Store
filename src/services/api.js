@@ -5,4 +5,4 @@ export async function apiGet(path) {
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const json = await res.json();
     return json.data;
-  }
+}

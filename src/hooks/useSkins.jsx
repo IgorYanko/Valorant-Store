@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getSkins } from "../services/getService";
+import { filterSkins } from "../utils/skin-filters";
 
 export const useSkins = () => {
   const [skins, setSkins] = useState([]);
@@ -12,7 +13,7 @@ export const useSkins = () => {
         setLoading(true);
         setError(null);
         const data = await getSkins();
-        setSkins(data);
+        setSkins(filterSkins(data));
       } catch (err) {
         setError(err.message ?? "Erro ao carregar skins");
       } finally {

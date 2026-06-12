@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useFilterContext } from "../contexts/FilterContext";
 
 export const Searchbar = () => {
-  const [search, setSearch] = useState('')
-  const [results, setResults] = useState([])
-
-  const handleSearch = (e) => {
-    setSearch(e.target.value)
-  }
+  const { search, setSearch } = useFilterContext();
 
   return (
-    <div className="">
-      <input className="searchbar" type="text" placeholder="Search" value={search} onChange={handleSearch} />
+    <div className="searchbar-wrapper">
+      <input
+        className="searchbar"
+        type="text"
+        placeholder="Search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
     </div>
-  )
-}
+  );
+};

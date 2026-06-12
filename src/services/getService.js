@@ -7,3 +7,7 @@ export const getSkins = async () => {
 export const getChromas = async () => {
     return apiGet('/chromas')
 }
+
+export const getLevels = async () => {
+    return apiGet('/levels')
+}
