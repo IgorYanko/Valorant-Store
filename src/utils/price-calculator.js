@@ -1,4 +1,4 @@
-function getSkinRarity(contentTierUuid) {
+export function getSkinRarity(contentTierUuid) {
     switch (contentTierUuid) {
         case '12683d76-48d7-84a3-4e09-6985794f0445':
             return 'Select'
