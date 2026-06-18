@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { SkinCard } from "./SkinCard";
-import { Pagination } from "./Pagination";
+import { SkinCard, Pagination } from "../components";
 import { useFilterContext } from "../contexts/FilterContext";
 
 const ITEMS_PER_PAGE = 12;
@@ -41,7 +40,7 @@ export const SkinList = () => {
   return (
     <div className="skin-list-wrapper">
       <p className="skin-list-count">
-        {filteredSkins.length}{" "}
+        <b>{filteredSkins.length}</b>{" "}
         {filteredSkins.length === 1 ? "skin encontrada" : "skins encontradas"}
       </p>
 

@@ -38,12 +38,14 @@ export default function SkinPage() {
 
   useEffect(() => {
     setVideoError(false)
-    if (getChromaVideoUrl(selectedChroma, skin)) {
-      setViewMode('video')
-    } else {
-      setViewMode('image')
-    }
-  }, [selectedChroma?.uuid, skin?.uuid])
+  }, [selectedChroma?.uuid])
+
+  useEffect(() => {
+    setSelectedChromaUuid(null)
+    setVideoError(false)
+    if (!skin) return
+    setViewMode(getChromaVideoUrl(skin.chromas?.[0], skin) ? 'video' : 'image')
+  }, [skin?.uuid])
 
   if (loading) {
     return <div className="app-loading">Carregando skin...</div>
@@ -58,7 +60,7 @@ export default function SkinPage() {
 
   return (
     <main className="skin-page">
-      <Link to="/" className="skin-page-back">
+      <Link to="/skins" className="skin-page-back">
         ← Voltar para a loja
       </Link>
 
@@ -75,13 +77,15 @@ export default function SkinPage() {
                 muted
                 playsInline
                 controls
+                onError={() => setVideoError(true)}
               />
             ) : (
-              <img
-                key={imageUrl}
+              <SkinImage
+                key={imageUrls.join('|')}
+                urls={imageUrls}
                 className="skin-page-image"
-                src={imageUrl}
                 alt={selectedChroma?.displayName ?? skin.displayName}
+                fallbackClassName="skin-page-image skin-image-fallback"
               />
             )}
           </div>

@@ -1,7 +1,7 @@
 import { useCarouselSkins } from "../hooks";
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { SkinImage } from "./SkinImage";
+import { SkinImage } from "../components";
 
 export const Carousel = () => {
   const { carouselSkins, loading } = useCarouselSkins();
