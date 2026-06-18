@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-// Gera a lista de páginas a exibir, com "..." para intervalos longos.
-// Ex: total=10, current=5 -> [1, '...', 4, 5, 6, '...', 10]
+
 function getPageNumbers(current, total) {
   const delta = 1
   const pages = []

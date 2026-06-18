@@ -14,7 +14,7 @@ export const SkinList = () => {
     Math.ceil(filteredSkins.length / ITEMS_PER_PAGE),
   );
 
-  // Sempre que a busca/filtro mudar, volta para a primeira página.
+ 
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filteredSkins.length]);
