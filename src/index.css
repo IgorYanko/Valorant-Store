@@ -7,86 +7,147 @@
 }
 
 :root {
-  --surface-dark: #16171d;
-  --surface-dark-border: #2e303a;
-  --input-text: #f3f4f6;
-  --input-placeholder: #9ca3af;
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* ===== Tactical dark palette ===== */
+  --bg: #0b0e13;
+  --bg-grain: #0e1219;
+  --surface: #12161f;
+  --surface-2: #171c27;
+  --surface-3: #1d2330;
+  --line: rgba(236, 232, 225, 0.08);
+  --line-strong: rgba(236, 232, 225, 0.16);
 
-  --sans: 'Valorant', system-ui, sans-serif;
-  --heading: 'Valorant', system-ui, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --red: #ff4655;
+  --red-deep: #d6303f;
+  --red-glow: rgba(255, 70, 85, 0.35);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light;
-  color: var(--text);
+  --text: #ece8e1;
+  --text-dim: #a8aeb9;
+  --text-mute: #6c7585;
+  --text-h: #ffffff;
+
+  /* legacy aliases still referenced by some components */
+  --surface-dark: #12161f;
+  --surface-dark-border: rgba(236, 232, 225, 0.12);
+  --input-text: #ece8e1;
+  --input-placeholder: #6c7585;
+  --bg-legacy: var(--bg);
+  --border: rgba(236, 232, 225, 0.08);
+
+  /* ===== Rarity accents ===== */
+  --r-select: #4aa6bd;
+  --r-deluxe: #2fc98a;
+  --r-premium: #ff4f8b;
+  --r-exclusive: #ff7a45;
+  --r-ultra: #ffce4a;
+  --r-unknown: #6c7585;
+
+  --shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.8);
+  --shadow-red: 0 14px 30px -14px var(--red-glow);
+
+  /* tactical clipped corner */
+  --cut: 14px;
+
+  --display: 'Valorant', 'Segoe UI', system-ui, sans-serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  font: 16px/1.55 var(--sans);
+  letter-spacing: 0.1px;
+  color-scheme: dark;
+  color: var(--text-dim);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background-color: var(--surface-dark);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(
+      circle at 20% -10%,
+      rgba(255, 70, 85, 0.08),
+      transparent 45%
+    ),
+    radial-gradient(circle at 100% 0%, rgba(74, 166, 189, 0.06), transparent 40%);
+  background-attachment: fixed;
 }
 
 #root {
-  width: 1126px;
+  width: 1180px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  text-align: left;
+  position: relative;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: var(--bg);
+  border-inline: 1px solid var(--line);
+  overflow: clip;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
+h2,
+h3 {
+  font-family: var(--display);
   color: var(--text-h);
+  font-weight: 500;
+  margin: 0;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.04;
+  letter-spacing: 0.5px;
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: 0.3px;
 }
+
 p {
   margin: 0;
+}
+
+a {
+  color: var(--red);
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--sans);
+}
+
+::selection {
+  background: var(--red);
+  color: #fff;
+}
+
+/* slim tactical scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 99px;
 }
 
 code,
@@ -94,12 +155,11 @@ code,
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 code {
-  font-size: 15px;
-  line-height: 135%;
+  font-size: 14px;
   padding: 4px 8px;
-  background: var(--code-bg);
+  background: var(--surface-2);
 }
