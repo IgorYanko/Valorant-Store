@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import { useSkinsContext } from './contexts/SkinsContext'
-import { ErrorPage } from './components'
+import { ErrorPage, Layout } from './components'
 import HomePage from './pages/HomePage'
+import SkinsPage from './pages/SkinsPage'
 import SkinPage from './pages/SkinPage'
+import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
 
 export default function App() {
   const { loading, error } = useSkinsContext()
@@ -19,8 +22,17 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/skin/:uuid" element={<SkinPage />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/skins" element={<SkinsPage />} />
+          <Route path="/skin/:uuid" element={<SkinPage />} />
+          <Route path="/sobre" element={<AboutPage />} />
+          <Route path="/contato" element={<ContactPage />} />
+          <Route
+            path="*"
+            element={<ErrorPage message="Página não encontrada." />}
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

@@ -1,10 +1,25 @@
+import { NavLink } from 'react-router-dom'
+
+const NAV_ITEMS = [
+  { to: '/', label: 'Início', end: true },
+  { to: '/skins', label: 'Skins' },
+  { to: '/sobre', label: 'Sobre' },
+  { to: '/contato', label: 'Contato' },
+]
+
 export const Navbar = () => {
   return (
-    <div className="navbar">
-        <a href="/">Início</a>
-        <a href="/">Sobre</a>
-        <a href="/">Contato</a>
-        <a>Skins</a>
-    </div>
+    <nav className="navbar">
+      {NAV_ITEMS.map(({ to, label, end }) => (
+        <NavLink
+          key={to}
+          to={to}
+          end={end}
+          className={({ isActive }) => (isActive ? 'active' : undefined)}
+        >
+          {label}
+        </NavLink>
+      ))}
+    </nav>
   )
 }
