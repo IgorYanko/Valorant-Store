@@ -1,6 +1,7 @@
 import { useCarouselSkins } from "../hooks";
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { SkinImage } from "./SkinImage";
 
 export const Carousel = () => {
   const { carouselSkins, loading } = useCarouselSkins();
@@ -55,7 +56,7 @@ export const Carousel = () => {
         </button>
 
         <div className={`carousel-item`} key={skin.uuid}>
-          <img src={skin.displayIcon} alt={skin.displayName} />
+          <SkinImage skin={skin} alt={skin.displayName} />
           <h1>{skin.displayName}</h1>
         </div>
 

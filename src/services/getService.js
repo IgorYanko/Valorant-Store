@@ -4,6 +4,10 @@ export const getSkins = async () => {
     return apiGet('/skins')
 }
 
+export const getWeapons = async () => {
+    return apiGet('')
+}
+
 export const getSkinByUuid = async (uuid) => {
     return apiGet(`/skins/${uuid}`)
 }

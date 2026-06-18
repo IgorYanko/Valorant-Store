@@ -1,10 +1,12 @@
-import { Searchbar, FilterDropdown } from './index'
+import { Searchbar, FilterChips } from './index'
 
 export const FilterGroup = () => {
   return (
     <div className="filter-group">
-      <Searchbar />
-      <FilterDropdown />
+      <div className="filter-group-row">
+        <Searchbar />
+      </div>
+      <FilterChips />
     </div>
   )
 }

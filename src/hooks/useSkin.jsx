@@ -7,12 +7,10 @@ export const useSkin = (uuid) => {
   const cachedSkin = skins.find((skin) => skin.uuid === uuid)
 
   const [fetchedSkin, setFetchedSkin] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (cachedSkin) return
-
     let cancelled = false
 
     async function loadSkin() {
@@ -36,13 +34,13 @@ export const useSkin = (uuid) => {
     return () => {
       cancelled = true
     }
-  }, [uuid, cachedSkin])
+  }, [uuid])
 
-  const skin = cachedSkin ?? (fetchedSkin?.uuid === uuid ? fetchedSkin : null)
+  const skin = fetchedSkin ?? cachedSkin ?? null
 
   return {
     skin,
-    loading: !cachedSkin && loading,
-    error: cachedSkin ? null : error,
+    loading: loading && !skin,
+    error,
   }
 }

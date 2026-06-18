@@ -1,15 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Header, Navbar, Footer, ErrorPage } from '../components'
+import { Header, Navbar, Footer, ErrorPage, SkinImage } from '../components'
 import { useSkin } from '../hooks/useSkin'
 import { getSkinPrice, getSkinRarity } from '../utils/price-calculator'
-import { getChromaImageUrl, getChromaVideoUrl } from '../utils/skin-video'
+import {
+  chromaHasOwnVideo,
+  getChromaImageUrls,
+  getChromaVideoUrl,
+  isBaseChroma,
+} from '../utils/skin-video'
 
 export default function SkinPage() {
   const { uuid } = useParams()
   const { skin, loading, error } = useSkin(uuid)
   const [viewMode, setViewMode] = useState('video')
   const [selectedChromaUuid, setSelectedChromaUuid] = useState(null)
+  const [videoError, setVideoError] = useState(false)
+
+  const chromas = skin?.chromas ?? []
+  const selectedChroma =
+    chromas.find((chroma) => chroma.uuid === selectedChromaUuid) ??
+    chromas[0] ??
+    null
+
+  const imageUrls = getChromaImageUrls(selectedChroma, skin)
+  const videoUrl = getChromaVideoUrl(selectedChroma, skin)
+  const hasVideo = Boolean(videoUrl)
+  const showVideo = viewMode === 'video' && hasVideo && !videoError
+  const variantMissingOwnVideo =
+    selectedChroma &&
+    !isBaseChroma(selectedChroma, skin) &&
+    !chromaHasOwnVideo(selectedChroma, skin) &&
+    chromas.some(
+      (chroma) =>
+        !isBaseChroma(chroma, skin) && chromaHasOwnVideo(chroma, skin),
+    )
+
+  useEffect(() => {
+    setVideoError(false)
+    if (getChromaVideoUrl(selectedChroma, skin)) {
+      setViewMode('video')
+    } else {
+      setViewMode('image')
+    }
+  }, [selectedChroma?.uuid, skin?.uuid])
 
   if (loading) {
     return <div className="app-loading">Carregando skin...</div>
@@ -18,17 +52,6 @@ export default function SkinPage() {
   if (error || !skin) {
     return <ErrorPage message={error ?? 'Skin não encontrada.'} />
   }
-
-  const chromas = skin.chromas ?? []
-  const selectedChroma =
-    chromas.find((chroma) => chroma.uuid === selectedChromaUuid) ??
-    chromas[0] ??
-    null
-
-  const imageUrl = getChromaImageUrl(selectedChroma, skin)
-  const videoUrl = getChromaVideoUrl(selectedChroma, skin)
-  const hasVideo = Boolean(videoUrl)
-  const showVideo = viewMode === 'video' && hasVideo
 
   const price = getSkinPrice(skin.contentTierUuid)
   const rarity = getSkinRarity(skin.contentTierUuid)
@@ -47,7 +70,7 @@ export default function SkinPage() {
             <div className="skin-page-media">
               {showVideo ? (
                 <video
-                  key={videoUrl}
+                  key={`${selectedChroma?.uuid ?? skin.uuid}-${videoUrl}`}
                   className="skin-page-video"
                   src={videoUrl}
                   autoPlay
@@ -55,13 +78,15 @@ export default function SkinPage() {
                   muted
                   playsInline
                   controls
+                  onError={() => setVideoError(true)}
                 />
               ) : (
-                <img
-                  key={imageUrl}
-                  className="skin-page-image"
-                  src={imageUrl}
+                <SkinImage
+                  urls={imageUrls}
+                  skin={skin}
                   alt={selectedChroma?.displayName ?? skin.displayName}
+                  className="skin-page-image"
+                  fallbackClassName="skin-image-fallback skin-page-image"
                 />
               )}
             </div>
@@ -78,11 +103,20 @@ export default function SkinPage() {
                 <button
                   type="button"
                   className={viewMode === 'video' ? 'active' : ''}
-                  onClick={() => setViewMode('video')}
+                  onClick={() => {
+                    setVideoError(false)
+                    setViewMode('video')
+                  }}
                 >
                   Vídeo
                 </button>
               </div>
+            )}
+
+            {variantMissingOwnVideo && (
+              <p className="skin-page-video-unavailable">
+                Vídeo indisponível para esta variante.
+              </p>
             )}
 
             {chromas.length > 0 && (
@@ -105,7 +139,11 @@ export default function SkinPage() {
                       onClick={() => setSelectedChromaUuid(chroma.uuid)}
                     >
                       {swatch ? (
-                        <img src={swatch} alt="" />
+                        <SkinImage
+                          src={swatch}
+                          alt=""
+                          fallbackClassName="skin-page-chroma-fallback"
+                        />
                       ) : (
                         <span className="skin-page-chroma-fallback" />
                       )}

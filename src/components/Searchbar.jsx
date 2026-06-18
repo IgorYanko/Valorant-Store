@@ -8,7 +8,7 @@ export const Searchbar = () => {
       <input
         className="searchbar"
         type="text"
-        placeholder="Search"
+        placeholder="Pesquisar skins"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
