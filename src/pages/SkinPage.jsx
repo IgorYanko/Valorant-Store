@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Header, Navbar, Footer, ErrorPage, SkinImage } from '../components'
+import { ErrorPage, SkinImage } from '../components'
 import { useSkin } from '../hooks/useSkin'
 import { getSkinPrice, getSkinRarity } from '../utils/price-calculator'
 import {
@@ -57,130 +57,110 @@ export default function SkinPage() {
   const rarity = getSkinRarity(skin.contentTierUuid)
 
   return (
-    <>
-      <Header />
-      <Navbar />
-      <main className="skin-page">
-        <Link to="/" className="skin-page-back">
-          ← Voltar para a loja
-        </Link>
+    <main className="skin-page">
+      <Link to="/" className="skin-page-back">
+        ← Voltar para a loja
+      </Link>
 
-        <div className="skin-page-content">
-          <div className="skin-page-media-column">
-            <div className="skin-page-media">
-              {showVideo ? (
-                <video
-                  key={`${selectedChroma?.uuid ?? skin.uuid}-${videoUrl}`}
-                  className="skin-page-video"
-                  src={videoUrl}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  controls
-                  onError={() => setVideoError(true)}
-                />
-              ) : (
-                <SkinImage
-                  urls={imageUrls}
-                  skin={skin}
-                  alt={selectedChroma?.displayName ?? skin.displayName}
-                  className="skin-page-image"
-                  fallbackClassName="skin-image-fallback skin-page-image"
-                />
-              )}
+      <div className="skin-page-content">
+        <div className="skin-page-media-column">
+          <div className="skin-page-media">
+            {showVideo ? (
+              <video
+                key={videoUrl}
+                className="skin-page-video"
+                src={videoUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+              />
+            ) : (
+              <img
+                key={imageUrl}
+                className="skin-page-image"
+                src={imageUrl}
+                alt={selectedChroma?.displayName ?? skin.displayName}
+              />
+            )}
+          </div>
+
+          {hasVideo && (
+            <div className="skin-page-view-switch" role="group" aria-label="Modo de visualização">
+              <button
+                type="button"
+                className={viewMode === 'image' ? 'active' : ''}
+                onClick={() => setViewMode('image')}
+              >
+                Imagem
+              </button>
+              <button
+                type="button"
+                className={viewMode === 'video' ? 'active' : ''}
+                onClick={() => setViewMode('video')}
+              >
+                Vídeo
+              </button>
             </div>
+          )}
 
-            {hasVideo && (
-              <div className="skin-page-view-switch" role="group" aria-label="Modo de visualização">
-                <button
-                  type="button"
-                  className={viewMode === 'image' ? 'active' : ''}
-                  onClick={() => setViewMode('image')}
-                >
-                  Imagem
-                </button>
-                <button
-                  type="button"
-                  className={viewMode === 'video' ? 'active' : ''}
-                  onClick={() => {
-                    setVideoError(false)
-                    setViewMode('video')
-                  }}
-                >
-                  Vídeo
-                </button>
-              </div>
-            )}
+          {chromas.length > 0 && (
+            <div className="skin-page-chromas" role="list" aria-label="Variantes">
+              {chromas.map((chroma) => {
+                const swatch =
+                  chroma.swatch ?? chroma.displayIcon ?? chroma.fullRender
 
-            {variantMissingOwnVideo && (
-              <p className="skin-page-video-unavailable">
-                Vídeo indisponível para esta variante.
-              </p>
-            )}
-
-            {chromas.length > 0 && (
-              <div className="skin-page-chromas" role="list" aria-label="Variantes">
-                {chromas.map((chroma) => {
-                  const swatch =
-                    chroma.swatch ?? chroma.displayIcon ?? chroma.fullRender
-
-                  return (
-                    <button
-                      key={chroma.uuid}
-                      type="button"
-                      role="listitem"
-                      className={
-                        selectedChroma?.uuid === chroma.uuid ? 'active' : ''
-                      }
-                      title={chroma.displayName}
-                      aria-label={chroma.displayName}
-                      aria-pressed={selectedChroma?.uuid === chroma.uuid}
-                      onClick={() => setSelectedChromaUuid(chroma.uuid)}
-                    >
-                      {swatch ? (
-                        <SkinImage
-                          src={swatch}
-                          alt=""
-                          fallbackClassName="skin-page-chroma-fallback"
-                        />
-                      ) : (
-                        <span className="skin-page-chroma-fallback" />
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="skin-page-info">
-            <h1>{skin.displayName}</h1>
-            {selectedChroma && chromas.length > 1 && (
-              <p className="skin-page-chroma-name">{selectedChroma.displayName}</p>
-            )}
-            <dl className="skin-page-details">
-              <div>
-                <dt>Raridade</dt>
-                <dd>{rarity}</dd>
-              </div>
-              <div>
-                <dt>Preço</dt>
-                <dd>{price ? `R$ ${price}` : '—'}</dd>
-              </div>
-              <div>
-                <dt>Níveis</dt>
-                <dd>{skin.levels?.length ?? 0}</dd>
-              </div>
-              <div>
-                <dt>Variantes</dt>
-                <dd>{chromas.length}</dd>
-              </div>
-            </dl>
-          </div>
+                return (
+                  <button
+                    key={chroma.uuid}
+                    type="button"
+                    role="listitem"
+                    className={
+                      selectedChroma?.uuid === chroma.uuid ? 'active' : ''
+                    }
+                    title={chroma.displayName}
+                    aria-label={chroma.displayName}
+                    aria-pressed={selectedChroma?.uuid === chroma.uuid}
+                    onClick={() => setSelectedChromaUuid(chroma.uuid)}
+                  >
+                    {swatch ? (
+                      <img src={swatch} alt="" />
+                    ) : (
+                      <span className="skin-page-chroma-fallback" />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
-      </main>
-      <Footer />
-    </>
+
+        <div className="skin-page-info">
+          <h1>{skin.displayName}</h1>
+          {selectedChroma && chromas.length > 1 && (
+            <p className="skin-page-chroma-name">{selectedChroma.displayName}</p>
+          )}
+          <dl className="skin-page-details">
+            <div>
+              <dt>Raridade</dt>
+              <dd>{rarity}</dd>
+            </div>
+            <div>
+              <dt>Preço</dt>
+              <dd>{price ? `R$ ${price}` : '—'}</dd>
+            </div>
+            <div>
+              <dt>Níveis</dt>
+              <dd>{skin.levels?.length ?? 0}</dd>
+            </div>
+            <div>
+              <dt>Variantes</dt>
+              <dd>{chromas.length}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </main>
   )
 }
